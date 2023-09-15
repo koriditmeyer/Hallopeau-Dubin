@@ -368,7 +368,7 @@ document
       // Saving to LocalStorage
       localStorage.setItem("watersData", JSON.stringify(allWaters));
       // Populate the Bootstrap Table after adding data
-      //populateTableWithData("#tableHD", allWaters);
+      populateTableWithData("#tableHD", allWaters);
 
       Toastify({
         text: "Water values computed and added to the table",
