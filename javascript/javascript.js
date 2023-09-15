@@ -320,7 +320,7 @@ function populateTableWithData(idTable, data) {
 //----------------------------------- APPLY FUNCTIONS ---------------------------------------
 // Declare allWaters variable
 let allWaters = [];
-//allWaters = getDataFromLocalStorage("watersData");
+allWaters = getDataFromLocalStorage("watersData");
 
 // Populate the table when the DOM is loaded
 $(document).ready(function () {
