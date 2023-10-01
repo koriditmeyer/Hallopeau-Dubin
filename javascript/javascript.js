@@ -730,7 +730,6 @@ $(document).ready(function () {
   } else {
     populateTableWithData("#tableHD", allWaters);
   }
-  console.log(allWaters);
 
   // Create the initial chart
   // X axis configuration
@@ -880,7 +879,7 @@ document
       // Saving results to Json file
       //saveJSON(allWaters);
       localStorage.setItem("watersData", JSON.stringify(allWaters)); //save to local storage
-      console.log("Water results are saved in JSON file");
+      console.log("Water results are saved in JSON format in local storage");
 
       //----------------------------------- Create Table ---------------------------------------
 
