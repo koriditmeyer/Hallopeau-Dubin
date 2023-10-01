@@ -4,11 +4,12 @@
   -webkit-text-fill-color: transparent;
   background-image: linear-gradient(
     to left,
-    #833ab4,
-    #e41dfd,
-    #e48bd2,
-    #e85271,
-    #813682
+    #03f8b7,
+    #00976F,
+    #38F7FC,
+    #02ADF3,
+    #CD09F7
+    
   );
 }
 .gradient-background {
@@ -18,7 +19,7 @@
   left: 0;
   position: absolute;
   z-index: -5;
-  background-color: #4c15bb;
-  background-image: linear-gradient(180deg, #fff 0%, #4c15bb 100%);
+  background-color: #505681;
+  background-image: linear-gradient(180deg, #fff 0%, #5062e8 100%);
   background-size: cover;
 }

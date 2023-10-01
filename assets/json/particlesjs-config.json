@@ -1,10 +1,10 @@
 {
   "particles": {
     "number": {
-      "value": 40
+      "value": 8
     },
     "color": {
-      "value": ["#FDA44C", "#604CFD", "#F85976", "#0FBBB4"]
+      "value": ["#FDFAB6", "#1EC790", "#108551", "#02ABD6"]
     },
     "shape": {
       "type": ["circle"],

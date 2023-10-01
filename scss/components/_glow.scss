@@ -25,9 +25,9 @@
     border-radius: 10px;
     background: linear-gradient(
         45deg,
-        #ff0000, #ff7300, #fffb00,
-        #48ff00, #00ffd5, #002bff,
-        #7a00ff, #ff00c8, #ff0000
+        #03f8b7, #00976F, #38F7FC,
+        #48ff00, #02ADF3, #002bff,
+        #7a00ff, #ff00c8, #CD09F7
     );
     background-size: 200%;
     filter: blur(5px);
@@ -61,18 +61,19 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background: #e41dfd;
+    background: #CD09F7,
+    ;
     border-radius: 10px;
     z-index: -1;
 }
 
 
 :root {
-    --clr-1: #ff0000;
-    --clr-2: #ff7300;
-    --clr-3: #ff00c8;
-    --clr-4: #7a00ff;
-    --clr-5: #ff0000;
+    --clr-1: #03f8b7;
+    --clr-2: #00976F;
+    --clr-3: #38F7FC;
+    --clr-4: #02ADF3;
+    --clr-5: #CD09F7;
   }
 
 @property --gradient-angle {
