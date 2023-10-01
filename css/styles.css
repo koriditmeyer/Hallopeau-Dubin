@@ -190,7 +190,7 @@ html {
   position: absolute;
   top: 0;
   left: 0;
-  width: auto;
+  width: 150%;
   height: 150%;
   z-index: -2;
   background-repeat: no-repeat;

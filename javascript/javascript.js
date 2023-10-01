@@ -723,7 +723,7 @@ $(document).ready(function () {
   //allWaters = getDataFromLocalStorage("watersData");
 
   if (!allWaters.length) {
-    GetJson("assets/json/output.json").then((data) => {
+    GetJson("assets/json/input.json").then((data) => {
       // Handle the fetched data here
       populateTableWithData("#tableHD", data);
     });
