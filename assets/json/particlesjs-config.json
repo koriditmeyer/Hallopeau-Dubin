@@ -1,0 +1,40 @@
+{
+  "particles": {
+    "number": {
+      "value": 40
+    },
+    "color": {
+      "value": ["#FDA44C", "#604CFD", "#F85976", "#0FBBB4"]
+    },
+    "shape": {
+      "type": ["circle"],
+      "image": {
+        "src": "assets/BG.png",
+        "width": 20,
+        "height": 20
+      }
+    },
+    "opacity": {
+      "value": 1
+    },
+    "size": {
+      "value": 10
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onclick": {
+        "enable": true,
+        "mode": "push"
+      },
+      "resize": true
+    },
+    "modes": {
+      "push": {
+        "particles_nb": 1
+      }
+    }
+  },
+  "retina_detect": true
+}

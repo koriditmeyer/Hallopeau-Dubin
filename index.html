@@ -1,17 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>App - Water Equilibrium</title>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO META -->
+    <meta name="description"
+        content="Discover our cutting-edge leak detection service! Innovative AI-powered technology for faster, cost-effective detection. Join the waiting list for reduced leak detection time and device costs. Serving municipalities and public bodies. Unique software as a service for leak recording device constructors. Get ready to revolutionize water networks!">
+    <meta name="keywords"
+        content="Discover, Cutting-Edge Features, Leak Detection Service, Innovative, AI-Powered Technology, Faster, More Cost-Effective, Minimal Viable Product, Detecting Leaks, Artificial Intelligence, Join Waiting List, Reduced Detection Time, Device Costs, Municipalities, Public Bodies, Software as a Service, Constructors, Revolutionize, Water Networks">
+    <!-- Page Title -->
+    <title>App | Water Equilibrium</title>
     <!-- Box Icons CSS-->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <!-- Bootstrap CSS-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- Include Bootstrap Table CSS -->
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
     <!-- Toastify CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <link rel="stylesheet" href="./extension/jquery.gridstrap.min.css"> 
+    <link rel="stylesheet" href="./extension/jquery.gridstrap.min.css">
     <!-- My CSS-->
     <link rel="stylesheet" href="./css/styles.css">
     <!-- not use favicon -->
@@ -19,242 +30,376 @@
 </head>
 
 <body>
-    <div class="container" id="nested-grid">
-        <h1>Water Equilibrium App</h1>
-
-        <p>The Hallopeau and Dubin method allows to quantitatively characterise a water’s free CO2 content and its
-            fraction
-            that attacks limestone, to calculate the amounts of neutralisation reagents and to anticipate water
-            properties
-            after applying a correction to adjust the pH to the calcium-carbonate balance value.</p>
-        <p>This App allows to calculate the calcium-carbonate balance using Hallopeau and Dubin method and graph.</p>
-        <div class="row">
-            <div class="col-md-6 nested-inner-grid">
-                <h2 class="text-center">Parameters</h2>
-                <form id="FormHallopeau" class="row g-3 needs-validation" novalidate>
-                    <h5>Main Parameters</h5>
-                    <div class="col-md-12">
-                        <div class="input-group has-validation">
-                            <div class="form-floating">
-                                <input class="form-control" type="text" id="validationName"
-                                    placeholder="Enter water sample name" value="Sample 1" required>
-                                <label for="validationName" class="form-label">Water Sample Name</label>
-                            </div>
-                        </div>
+    <main>
+        <!-- Hero section -->
+        <div class="hero-section">
+            <div class="gradient-background "></div>
+            <!-- bg image -->
+            <div class="background-overlay bg-no-repeat bg-cover opacity-100 transition-all"></div>
+            <!-- bg particles -->
+            <div id="particles-js"></div>
+            <!-- Hero content -->
+            <div class="hero-content container align-items-center col-xl-10 col-xxl-8 px-4 py-5">
+                <div class="row align-items-center g-lg-5 py-5">
+                    <div class="col-lg-5 text-center text-lg-start">
+                        <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3 gradient-word">Water Equilibrium App
+                        </h1>
+                        <h2 class="text-50 " data-text-rotator="true">
+                            This App allows to calculate the calcium-carbonate balance using
+                            Hallopeau and
+                            Dubin method and graph.
+                        </h2>
                     </div>
-                    <div class="col-md-6 ">
-                        <div class="input-group has-validation">
-                            <div class="form-floating">
-                                <input class=" form-control" type="text" id="validationTemp"
-                                    placeholder="Input Temperature" value="10" required>
-                                <label for="validationTemp" class="form-label">Temperature</label>
-                            </div>
-                            <span class="input-group-text" id="inputFormAppend"> ºC </span>
-                            <div class="invalid-feedback">
-                                invalid
-                            </div>
-                        </div>
-                        <div class="form-text text-muted">Enter Tº between 0 to 81 ºC</div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="input-group has-validation">
-                            <div class="form-floating">
-                                <input class="form-control" type="text" id="validationpH" placeholder="Input pH"
-                                    value="6.1" required>
-                                <label for="validationpH" class="form-label">pH</label>
-                            </div>
-                        </div>
-                        <div class="form-text text-muted">Enter pH between 5 to 10</div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="input-group has-validation">
-                            <div class="form-floating">
-                                <input class="form-control" type="text" id="validationTAC" placeholder="Input TAC"
-                                    value="2.5" required>
-                                <label for="validationTAC" class="form-label">TAC</label>
-                            </div>
-                            <span class="input-group-text" id="inputGroupAppend"> ºF </span>
-                            <div class="invalid-feedback">
-                                invalid
-                            </div>
-                        </div>
-                        <div class="form-text text-muted">Enter TAC between 0.5 to 100 ºF</div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="input-group has-validation">
-                            <div class="form-floating">
-                                <input class="form-control" type="text" id="validationCalcium"
-                                    placeholder="Input Calcium" value="5" required>
-                                <label for="validationCalcium" class="form-label">Calcium </label>
-                            </div>
-                            <span class="input-group-text" id="inputGroupAppend"> ºF </span>
-                            <div class="invalid-feedback">
-                                invalid
-                            </div>
-                        </div>
-                        <div class="form-text text-muted">Enter Calcium superior to 0 ºF</div>
-                    </div>
-
-                    <div class="accordion" id="accordionExample">
-                        <div class="accordion-item bg-primary">
-                            <h5 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Optional Parameters
-                                </button>
-                            </h5>
-                        </div>
-                        <div id="collapseOne" class=" accordion-collapse collapse " data-bs-parent="#accordionExample">
-                            <div class="accordion-body border ">
-                                <div class="row">
-                                    <div class="col-lg-6 pb-2 ps-1">
-                                        <div class="input-group has-validation">
-                                            <div class="form-floating">
-                                                <input class="form-control" type="text" id="validationResidual"
-                                                    placeholder="Input Dry Residual" value="70">
-                                                <label for="validationResidual" class="form-label">Dry Residual</label>
-                                            </div>
-                                            <span class="input-group-text" id="inputGroupAppend"> mg/l </span>
-                                            <div class="invalid-feedback">
-                                                invalid
-                                            </div>
-                                        </div>
+                    <!-- Form content -->
+                    <div class="col-md-10 mx-auto col-lg-7">
+                        <form id="FormHallopeau" class="row p-4 p-md-5   bg-body-tertiary needs-validation card-scale"
+                            novalidate>
+                            <h5>Main Parameters</h5>
+                            <div class="col-md-12 mb-3 js-input-val">
+                                <div class="input-group has-validation">
+                                    <div class="form-floating">
+                                        <input class="form-control" type="text" id="validationName"
+                                            placeholder="Enter water sample name" value="Sample 1" required>
+                                        <label for="validationName" class="form-label">Water Sample Name</label>
                                     </div>
-                                    <div class="col-lg-6 pb-2 ps-1">
-                                        <div class="input-group has-validation">
-                                            <div class="form-floating">
-                                                <input class="form-control" type="text" id="validationConductivity"
-                                                    placeholder="Input Conductivity">
-                                                <label for="validationConductivity"
-                                                    class="form-label">Conductivity</label>
-                                            </div>
-                                            <span class="input-group-text" id="inputGroupAppend"> μS/cm </span>
-                                            <div class="invalid-feedback">
-                                                invalid
-                                            </div>
-                                        </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3 js-input-val">
+                                <div class="input-group has-validation">
+                                    <div class="form-floating">
+                                        <input class=" form-control" type="text" id="validationTemp"
+                                            placeholder="Input Temperature" value="10" required>
+                                        <label for="validationTemp" class="form-label">Temperature</label>
                                     </div>
-                                    <div class="col-lg-6 pb-2 ps-1">
-                                        <div class="input-group has-validation">
-                                            <div class="form-floating">
-                                                <input class="form-control" type="text" id="validationResistivity"
-                                                    placeholder="Input Resistivity">
-                                                <label for="validationResistivity"
-                                                    class="form-label">Resistivity</label>
-                                            </div>
-                                            <span class="input-group-text" id="inputGroupAppend"> Ohm/cm </span>
-                                            <div class="invalid-feedback">
-                                                invalid
-                                            </div>
-                                        </div>
+                                    <span class="input-group-text" id="inputFormAppend"> ºC </span>
+                                    <div class="invalid-feedback">
+                                        invalid
                                     </div>
-                                    <div class="col-lg-6 pb-2 ps-1">
-                                        <div class="input-group has-validation">
-                                            <div class="form-floating">
-                                                <input class="form-control" type="text" id="validationSulfate"
-                                                    placeholder="Input Sulfate">
-                                                <label for="validationSulfate" class="form-label">Sulfate</label>
-                                            </div>
-                                            <span class="input-group-text" id="inputGroupAppend"> mg/l </span>
-                                            <div class="invalid-feedback">
-                                                invalid
-                                            </div>
-                                        </div>
+                                </div>
+                                <div class="form-text text-muted">Enter Tº between 0 to 81 ºC</div>
+                            </div>
+                            <div class="col-md-6 mb-3 js-input-val">
+                                <div class="input-group has-validation">
+                                    <div class="form-floating">
+                                        <input class="form-control" type="text" id="validationpH" placeholder="Input pH"
+                                            value="6.1" required>
+                                        <label for="validationpH" class="form-label">pH</label>
                                     </div>
-                                    <div class="col-lg-6 pb-2 ps-1">
-                                        <div class="input-group has-validation">
-                                            <div class="form-floating">
-                                                <input class="form-control" type="text" id="validationChloride"
-                                                    placeholder="Input Chloride">
-                                                <label for="validationChloride" class="form-label">Chloride</label>
-                                            </div>
-                                            <span class="input-group-text" id="inputGroupAppend"> mg/l </span>
-                                            <div class="invalid-feedback">
-                                                invalid
-                                            </div>
-                                        </div>
+                                </div>
+                                <div class="form-text text-muted">Enter pH between 5 to 10</div>
+                            </div>
+                            <div class="col-md-6 mb-3 js-input-val">
+                                <div class="input-group has-validation">
+                                    <div class="form-floating">
+                                        <input class="form-control" type="text" id="validationTAC"
+                                            placeholder="Input TAC" value="2.5" required>
+                                        <label for="validationTAC" class="form-label">TAC</label>
                                     </div>
-                                    <div class="col-lg-6 pb-2 ps-1">
-                                        <div class="input-group has-validation">
-                                            <div class="form-floating">
-                                                <input class="form-control" type="text" id="validationRound"
-                                                    placeholder="Number of Decimals for Results" value="3" required>
-                                                <label for="validationRound" class="form-label">Nb of Decimals for
-                                                    Results</label>
+                                    <span class="input-group-text" id="inputGroupAppend"> ºF </span>
+                                    <div class="invalid-feedback">
+                                        invalid
+                                    </div>
+                                </div>
+                                <div class="form-text text-muted">Enter TAC between 0.5 to 100 ºF</div>
+                            </div>
+                            <div class="col-md-6 mb-3 js-input-val">
+                                <div class="input-group has-validation">
+                                    <div class="form-floating">
+                                        <input class="form-control" type="text" id="validationCalcium"
+                                            placeholder="Input Calcium" value="5" required>
+                                        <label for="validationCalcium" class="form-label">Calcium </label>
+                                    </div>
+                                    <span class="input-group-text" id="inputGroupAppend"> ºF </span>
+                                    <div class="invalid-feedback">
+                                        invalid
+                                    </div>
+                                </div>
+                                <div class="form-text text-muted">Enter Calcium superior to 0 ºF</div>
+                            </div>
+                            <!-- Collapse form part -->
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item bg-primary ">
+                                    <h5 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseOne" aria-expanded="true"
+                                            aria-controls="collapseOne">
+                                            Optional Parameters
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="collapseOne" class=" accordion-collapse collapse "
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body border ">
+                                        <div class="row">
+                                            <div class="col-lg-6 pb-2 ps-1 js-input-val">
+                                                <div class="input-group has-validation">
+                                                    <div class="form-floating">
+                                                        <input class="form-control" type="text" id="validationResidual"
+                                                            placeholder="Input Dry Residual" value="70">
+                                                        <label for="validationResidual" class="form-label">Dry
+                                                            Residual</label>
+                                                    </div>
+                                                    <span class="input-group-text" id="inputGroupAppend"> mg/l </span>
+                                                    <div class="invalid-feedback">
+                                                        invalid
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="invalid-feedback">
-                                                invalid number
+                                            <div class="col-lg-6 pb-2 ps-1 js-input-val">
+                                                <div class="input-group has-validation">
+                                                    <div class="form-floating">
+                                                        <input class="form-control" type="text"
+                                                            id="validationConductivity"
+                                                            placeholder="Input Conductivity">
+                                                        <label for="validationConductivity"
+                                                            class="form-label">Conductivity</label>
+                                                    </div>
+                                                    <span class="input-group-text" id="inputGroupAppend"> μS/cm </span>
+                                                    <div class="invalid-feedback">
+                                                        invalid
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 pb-2 ps-1 js-input-val">
+                                                <div class="input-group has-validation">
+                                                    <div class="form-floating">
+                                                        <input class="form-control" type="text"
+                                                            id="validationResistivity" placeholder="Input Resistivity">
+                                                        <label for="validationResistivity"
+                                                            class="form-label">Resistivity</label>
+                                                    </div>
+                                                    <span class="input-group-text" id="inputGroupAppend"> Ohm/cm </span>
+                                                    <div class="invalid-feedback">
+                                                        invalid
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 pb-2 ps-1 js-input-val">
+                                                <div class="input-group has-validation">
+                                                    <div class="form-floating">
+                                                        <input class="form-control" type="text" id="validationSulfate"
+                                                            placeholder="Input Sulfate">
+                                                        <label for="validationSulfate"
+                                                            class="form-label">Sulfate</label>
+                                                    </div>
+                                                    <span class="input-group-text" id="inputGroupAppend"> mg/l </span>
+                                                    <div class="invalid-feedback">
+                                                        invalid
+                                                    </div>
+                                                </div>
+                                                <div class="form-text text-muted">Used To compute Larson Ratio</div>
+                                            </div>
+                                            <div class="col-lg-6 pb-2 ps-1 js-input-val">
+                                                <div class="input-group has-validation">
+                                                    <div class="form-floating">
+                                                        <input class="form-control" type="text" id="validationChloride"
+                                                            placeholder="Input Chloride">
+                                                        <label for="validationChloride"
+                                                            class="form-label">Chloride</label>
+                                                    </div>
+                                                    <span class="input-group-text" id="inputGroupAppend"> mg/l </span>
+                                                    <div class="invalid-feedback">
+                                                        invalid
+                                                    </div>
+                                                </div>
+                                                <div class="form-text text-muted">Used To compute Larson Ratio</div>
+                                            </div>
+                                            <div class="col-lg-6 pb-2 ps-1 js-input-val">
+                                                <div class="input-group has-validation">
+                                                    <div class="form-floating">
+                                                        <input class="form-control" type="text" id="validationRound"
+                                                            placeholder="Number of Decimals for Results" value="3"
+                                                            required>
+                                                        <label for="validationRound" class="form-label">Nb of Decimals
+                                                            for
+                                                            Results</label>
+                                                    </div>
+                                                    <div class="invalid-feedback">
+                                                        invalid number
+                                                    </div>
+                                                </div>
+                                                <div class="form-text text-muted">Enter value from 1 to 4</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="d-grid mt-3 col-12">
+                                <button class="btn btn-primary glow_effect" id="ValidationButon" type="submit">
+                                    Compute
+                                </button>
+                            </div>
+                            <hr class="my-4">
+                            <small class="text-body-secondary">Computation based on Hallopeau-Dubin model, which also
+                                takes into account an estimate of ionic strength and uses the pH, TAC couple, as well as
+                                simplified equations</small>
+                        </form>
                     </div>
-                    <div class="d-grid ">
-                        <button class="btn btn-primary glow-on-hover" id="ValidationButon" type="submit">
-                            <!-- ::before -->
-                            Compute
-                            <!-- ::after -->
-                        </button>
-                    </div>
-                </form>
-
-            </div>
-            <div class="col-md-6 nested-inner-grid" >
-                <h2 class="text-center">Results</h2>
-                <div id="Results"></div>
-                <h2 class="text-center p-2">Chart</h2>
-                <div id="plotly-chart">
-            </div>
-            <div class="col-md-6 nested-inner-grid">
-                
                 </div>
             </div>
         </div>
-        <div class="container">
-            <h2 class="text-center p-2">Table with results</h2>
-            <div class="table-responsive">
-                <table id="tableHD" data-toggle="table" data-show-columns="true" data-show-fullscreen="true"
-                    data-search="true" data-icons-prefix="iclass" data-icons="icons"
-                    data-detail-formatter="detailFormatter" data-detail-view="true"
-                    data-hide-unused-select-options="true" data-detail-filter="detailFilter" data-pagination="true"
-                    data-page-list="[10, 100, 1000, All]" data-custom-sort="customSort"
-                    class="table table-striped table-hover table-sm ">
-                    <thead>
-                        <tr>
-                            <th data-field="id" data-valign="middle" rowspan="2">ID</th>
-                            <th colspan="11" data-valign="middle">Input</th>
-                            <th colspan="3" data-valign="middle">Results</th>
-                        </tr>
-                        <tr>
-                            <th data-field="WaterName" data-sortable="true" data-switchable="false">Water sample name
-                            </th>
-                            <th data-field="temperature" data-sortable="true">Temperature</th>
-                            <th data-field="pH" data-sortable="true">pH</th>
-                            <th data-field="TAC" data-sortable="true">TAC</th>
-                            <th data-field="calcium" data-sortable="true">Calcium</th>
-                            <th data-field="DryResidual" data-visible="false">Dry Residual</th>
-                            <th data-field="conductivity" data-visible="false">Conductivity</th>
-                            <th data-field="resistivity" data-visible="false">Resistivity</th>
-                            <th data-field="sulfate" data-visible="false">Sulfate</th>
-                            <th data-field="cloride" data-visible="false">Chloride</th>
-                            <th data-field="roundnumber" data-visible="false">Round Number</th>
-                            <th data-field="pHs" data-sortable="true">pHs</th>
-                            <th data-field="LSI" data-sortable="true">LSI</th>
-                            <th data-field="IR" data-sortable="true">IR</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
+        <div class="results-section bg-sweeked row justify-content-center">
+            <div class="between-section">
+                <!-- title -->
+                <div class="container col-md-6">
+                    <div class="row justify-content-around ">
+                        <h2 class="display-4 fw-bold lh-1 text-body-emphasis gradient-word text-center mb-5 ">
+                            Results
+                        </h2>
+                    </div>
+                </div>
+                <!-- Cards -->
+                <div class="container col-md-10">
+                    <div class="row g-0 glow-border card-group-c">
+                        <div class="col-lg-4">
+                            <!-- <div class="card-group glow-border"> -->
+                            <div class="card  border-0 card-scale h-100">
+                                <!-- <img src="./assets/corrosion.jpeg" class="card-img-top" alt="result of calculation LSI"> -->
+                                <div class="card-body ">
+                                    <h5 class="card-title">Langelier Saturation Index (LSI) </h5>
+                                    <p class="card-text">LSI value: <span class="badge text-bg-light"
+                                            id="LSI-result-badge">No
+                                            value</span></p>
+                                    <h6 class="card-title">Type of Water:</h6>
+                                    <ul>
+                                        <li class="card-text">According to Langelier 1936: <span
+                                                class="badge text-bg-light" id="LSI-meaning-Langelier-badge">No
+                                                information</span></li>
+                                        <li class="card-text">According to Carrier 1965: <span
+                                                class="badge text-bg-light" id="LSI-meaning-Carrier-badge">No
+                                                information</span></li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">It measures whether the water is under-saturated
+                                        (corrosive) or over-saturated (scaling) with respect to
+                                        calcium carbonate. It usefull for preventing damage to water distribution
+                                        systems and
+                                        equipment.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card border-0 card-scale h-100">
+                                <!-- <img src="./assets/corrosion.jpeg" class="card-img-top" alt="result of calculation LSI"> -->
+                                <div class="card-body">
+                                    <h5 class="card-title">Ryznar Index (RI)</h5>
+                                    <p class="card-text">RI value: <span class="badge text-bg-light"
+                                            id="RI-result-badge">No
+                                            value</span></p>
+                                    <h6 class="card-title">Type of Water:</h6>
+                                    <ul>
+                                        <li class="card-text">According to Ryznar 1942: <span
+                                                class="badge text-bg-light" id="RI-meaning-badge">No
+                                                information</span>
+                                        </li>
+                                        <li class="card-text">According to Carrier 1965: <span
+                                                class="badge text-bg-light" id="RI-meaning-Carrier-badge">No
+                                                information</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">It considers factors such as pH, alkalinity,
+                                        and temperature. This index is valuable for assessing the potential for
+                                        corrosion and helps in selecting appropriate water treatment
+                                        methods.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card border-0 card-scale h-100">
+                                <!-- <img src="./assets/corrosion.jpeg" class="card-img-top" alt="result of calculation LSI"> -->
+                                <div class="card-body">
+                                    <h5 class="card-title">Larson Ratio (LR)</h5>
+                                    <p class="card-text">LR value: <span class="badge text-bg-light"
+                                            id="LR-result-badge">No
+                                            value</span></p>
+                                    <h6 class="card-title">Type of Water:</h6>
+                                    <ul>
+                                        <li class="card-text">According to Larson 1958: <span
+                                                class="badge text-bg-light" id="LR-meaning-badge">No
+                                                information</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary"> It calculates the ratio of sulfate
+                                        ions to chloride ions in water. It is particularly important in construction
+                                        and
+                                        civil
+                                        engineering to avoid corrosion-related issues in infrastructure.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
+        </div>
+        <div class="container-fluid">
+            <div class="row justify-content-around">
+                <!-- Table -->
+                <div class="col-md-5 nested-inner-grid card-scale ">
+                    <h2 class="text-center p-2">Table with results</h2>
+                    <div class="table-responsive">
+                        <table id="tableHD" data-toggle="table" data-show-columns="true" data-show-fullscreen="false"
+                            data-search="true" data-icons-prefix="iclass" data-icons="icons"
+                            data-detail-formatter="detailFormatter" data-detail-view="true"
+                            data-hide-unused-select-options="true" data-detail-filter="detailFilter"
+                            data-pagination="true" data-page-list="[10,15,20]" data-custom-sort="customSort"
+                            class="table table-striped table-hover table-sm ">
+                            <thead>
+                                <tr>
+                                    <th data-field="id" data-valign="middle" rowspan="2">ID</th>
+                                    <th colspan="11" data-valign="middle">Input</th>
+                                    <th colspan="3" data-valign="middle">Results</th>
+                                </tr>
+                                <tr>
+                                    <th data-field="WaterName" data-sortable="true" data-switchable="false">Water sample
+                                        name
+                                    </th>
+                                    <th data-field="temperature" data-sortable="true">Temperature</th>
+                                    <th data-field="pH" data-sortable="true">pH</th>
+                                    <th data-field="TAC" data-sortable="true">TAC</th>
+                                    <th data-field="calcium" data-sortable="true">Calcium</th>
+                                    <th data-field="DryResidual" data-visible="false">Dry Residual</th>
+                                    <th data-field="conductivity" data-visible="false">Conductivity</th>
+                                    <th data-field="resistivity" data-visible="false">Resistivity</th>
+                                    <th data-field="sulfate" data-visible="false">Sulfate</th>
+                                    <th data-field="cloride" data-visible="false">Chloride</th>
+                                    <th data-field="roundnumber" data-visible="false">Round Number</th>
+                                    <th data-field="pHs" data-sortable="true">pHs</th>
+                                    <th data-field="LSI" data-sortable="true">LSI</th>
+                                    <th data-field="IR" data-sortable="true">IR</th>
+                                    <th data-field="LR" data-visible="false">LR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-    </div>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Chart -->
+                <div class="col-md-5 nested-inner-grid card-scale">
+                    <h2 class="text-center p-2">Chart</h2>
+                    <div class="chart-container">
+                        <div id="plotly-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+
+
+
+
+
+    </main>
+    <!-- Particles JS -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="../javascript/particles.js"></script>
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <!-- Include jQuery (required for Bootstrap Table) -->
@@ -262,7 +407,9 @@
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script> -->
     <!-- Bootstrap JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> -->
     <!-- Include Bootstrap Table JS -->

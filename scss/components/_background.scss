@@ -1,0 +1,58 @@
+.background-overlay {
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: -2;
+  background-image: url("../assets/BG.png");
+}
+
+.bg-no-repeat {
+  background-repeat: no-repeat;
+}
+
+.bg-cover {
+  background-size: cover;
+}
+
+.opacity-100 {
+  opacity: 0.1;
+}
+
+.transition-all {
+  transition: transform 0.85s cubic-bezier(0.23, 1, 0.32, 1), background 0.3s,
+    border 0.3s, border-radius 0.3s, box-shadow 0.3s;
+}
+
+.bg-sweeked {
+  width: 100%;
+  height: auto;
+  position: relative;
+  background-image: #fff;
+  z-index: 2;
+}
+
+.bg-sweeked::before {
+  content: "";
+  width: 100%;
+  height: 200px;
+  position: absolute;
+  top: -70px;
+  left: 0;
+  background-image: linear-gradient(180deg, #cedafc 0%, #fff 100%);
+  transform: skewY(2deg);
+}
+
+// .bg-sweeked::after {
+//   content: "";
+//   width: 50%;
+//   height: 100%;
+//   position: absolute;
+//   top: -48px;
+//   right: 0;
+//   background-image: linear-gradient(180deg, #fff 0%, #4c15bb 100%);
+//   transform: skewY(-8deg);
+// }
+
+

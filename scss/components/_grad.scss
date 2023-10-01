@@ -1,0 +1,24 @@
+.gradient-word {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(
+    to left,
+    #833ab4,
+    #e41dfd,
+    #e48bd2,
+    #e85271,
+    #813682
+  );
+}
+.gradient-background {
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: -5;
+  background-color: #4c15bb;
+  background-image: linear-gradient(180deg, #fff 0%, #4c15bb 100%);
+  background-size: cover;
+}

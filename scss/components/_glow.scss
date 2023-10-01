@@ -1,0 +1,129 @@
+.button_100perc{
+    width: 100%;
+
+}
+
+.glow_effect{
+    position: relative;
+    width: 100%;
+    height: 120%;
+    border: 1px solid rgba(255,255,255,0.8);
+    outline: none;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 0;
+}
+
+.glow_effect::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+     width: calc(100% + 4px);
+     height: calc(100% + 4px);
+    border-radius: 10px;
+    background: linear-gradient(
+        45deg,
+        #ff0000, #ff7300, #fffb00,
+        #48ff00, #00ffd5, #002bff,
+        #7a00ff, #ff00c8, #ff0000
+    );
+    background-size: 200%;
+    filter: blur(5px);
+    z-index: -1;
+    opacity: 0;
+    transition:  opacity .3s ease-in-out;
+    // animation
+    animation: glowing_effect 20s linear infinite;
+}
+
+@keyframes glowing_effect {
+    0%{background-position:  0 0;}
+    50%{background-position:  200% 0;}
+    100%{background-position:  0 0;}
+}
+
+.glow_effect:active{
+    color: #fff;
+}
+.glow_effect:active:after{
+    background: transparent;
+}
+
+.glow_effect:hover::before{
+    opacity: 1;
+}
+.glow_effect::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: #e41dfd;
+    border-radius: 10px;
+    z-index: -1;
+}
+
+
+:root {
+    --clr-1: #ff0000;
+    --clr-2: #ff7300;
+    --clr-3: #ff00c8;
+    --clr-4: #7a00ff;
+    --clr-5: #ff0000;
+  }
+
+@property --gradient-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
+  
+.glow-border{
+    //height: 60vh;
+    //aspect-ratio: 1 / 1.5;
+    background: var(--clr-1);
+    border-radius: 0rem; 
+    position: relative;
+}
+
+.glow-border::before,
+.glow-border::after {
+  content: "";
+  position: absolute;
+  inset: -0.2rem;
+  z-index: -2;
+  background: conic-gradient(
+    from var(--gradient-angle),
+    var(--clr-3),
+    var(--clr-4),
+    var(--clr-5),
+    var(--clr-4),
+    var(--clr-3)
+  );
+  border-radius: inherit;
+  animation: rotation 10s linear infinite;
+}
+
+
+.glow-border::after {
+  filter: blur(2.5rem);
+}
+
+@keyframes rotation {
+  0% {
+    --gradient-angle: 0deg;
+  }
+  100% {
+    --gradient-angle: 360deg;
+  }
+}
+
+
+
+
+  
+    
+ 

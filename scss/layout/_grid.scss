@@ -1,0 +1,32 @@
+/*--------------------------------------------------  */
+
+@mixin grid($columns, $size) {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat($columns, $size);
+  padding: 20px;
+}
+
+.grid--responsive {
+  /* Responsive gid without media queries */
+  @include grid(auto-fit, minmax(300px, 1fr));
+
+  /* Responsive gid with mediaqueries -> More exact */
+  &--mq {
+    @include grid(1, 1fr);
+
+    @media (width> 768px) {
+      .grid--responsive_MQ {
+        @include grid(2, 1fr);
+      }
+    }
+    @media (width> 1024px) {
+      .grid--responsive_MQ {
+        @include grid(3, 1fr);
+      }
+    }
+  }
+}
+
+
+

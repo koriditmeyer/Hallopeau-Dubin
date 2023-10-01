@@ -1,0 +1,21 @@
+/* BASE */
+@import "./base/reset";
+@import "./base/typo";
+@import "./base/colores";
+/* COMPONENTS */
+@import "./components/grad";
+@import "./components/background";
+@import "./components/glow";
+@import "./components/particles";
+@import "./components/card";
+@import "./components/chart";
+@import "./components/results";
+@import "./components/text";
+/* LAYOUT */
+@import "./layout/flex";
+@import "./layout/grid";
+@import "./layout/hero";
+/* VIEWS */
+@import "./views/index";
+
+

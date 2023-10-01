@@ -1,0 +1,11 @@
+{
+  "name": "hallopeau-dubin",
+  "version": "1.0.0",
+  "description": "App for water quality ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kori Ditmeyer",
+  "license": "ISC"
+}
