@@ -249,6 +249,7 @@ html {
   left: 0px;
   margin-bottom: -150px;
 }
+
 @media (width > 576px) {
   .between-section {
     top: -200px;
@@ -259,7 +260,6 @@ html {
     top: -280px;
   }
 }
-
 .results-section-graph {
   position: relative;
   width: auto;
@@ -267,9 +267,9 @@ html {
   background: #fff;
   z-index: -2;
 }
+
 .highlight {
   position: relative;
-  -webkit-animation: 1.5s highlight 1.5s 1 normal forwards;
   animation: 1.5s highlight 1.5s 1 normal forwards;
   background-color: none;
   background: linear-gradient(90deg, rgba(228, 139, 210, 0.5960784314) 50%, rgba(216, 34, 180, 0) 20%);
@@ -279,11 +279,6 @@ html {
   padding: 0.2em 0.2em;
 }
 
-@-webkit-keyframes highlight {
-  to {
-    background-position: 0 0;
-  }
-}
 @keyframes highlight {
   to {
     background-position: 0 0;
@@ -300,11 +295,13 @@ html {
 .flex__article--responsive, .flex__article--responsive--right {
   flex-wrap: wrap-reverse;
 }
+
 .flex__article--responsive > *, .flex__article--responsive--right > * {
   flex-basis: 480px;
   flex-grow: 1;
   flex-shrink: 1;
 }
+
 @media (width > 768px) {
   .flex__article--responsive, .flex__article--responsive--right {
     gap: 0 2rem;
@@ -320,7 +317,6 @@ html {
     gap: 0 20rem;
   }
 }
-
 @media (width > 768px) {
   .flex__article--responsive--right {
     justify-content: flex-end;
@@ -331,7 +327,6 @@ html {
     flex-shrink: auto;
   }
 }
-
 .flex__button--responsive {
   flex-wrap: wrap;
 }
@@ -342,12 +337,12 @@ html {
   align-items: stretch;
   justify-content: center;
 }
+
 @media (width > 768px) {
   .flex--buttons {
     flex-flow: row wrap;
   }
 }
-
 /*--------------------------------------------------  */
 .grid--responsive {
   /* Responsive gid without media queries */
@@ -357,12 +352,14 @@ html {
   padding: 20px;
   /* Responsive gid with mediaqueries -> More exact */
 }
+
 .grid--responsive--mq {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(1, 1fr);
   padding: 20px;
 }
+
 @media (width > 768px) {
   .grid--responsive--mq .grid--responsive_MQ {
     display: grid;
@@ -379,7 +376,6 @@ html {
     padding: 20px;
   }
 }
-
 .hero-section {
   position: relative;
   overflow: hidden;
@@ -392,6 +388,6 @@ html {
   text-align: center;
 }
 
-/* VIEWS */
+/* VIEWS */ 
 
 /*# sourceMappingURL=styles.css.map */

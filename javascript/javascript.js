@@ -284,8 +284,8 @@ class water {
     // console.log(calc_pHs_);
     // Create an object to hold all the computed results
     let pHs_Results = {
-      temperature: temperature,
-      TAC: TAC,
+      temperature: temperature.toFixed(roundnumber),
+      TAC: TAC.toFixed(roundnumber),
       pHs_: calc_pHs_.toFixed(roundnumber),
     };
 
@@ -326,9 +326,9 @@ class water {
     // console.log(calc_pH);
     // Create an object to hold all the computed results
     let CO2pHCurve = {
-      temperature: temperature,
+      temperature: temperature.toFixed(roundnumber),
       CO2: CO2,
-      TAC: TAC,
+      TAC: TAC.toFixed(roundnumber),
       pH: calc_pH.toFixed(roundnumber),
     };
 
@@ -378,9 +378,9 @@ class water {
     // console.log(calc_TAC);
     // Create an object to hold all the computed results
     let CO2TACCurve = {
-      temperature: temperature,
+      temperature: temperature.toFixed(roundnumber),
       CO2: CO2,
-      pH: pH,
+      pH: pH.toFixed(roundnumber),
       TAC: calc_TAC.toFixed(roundnumber),
     };
 
@@ -714,23 +714,88 @@ function GetJson(location) {
     });
 }
 
+//function to find intersection of two curves
+function findIntersection(curve1, curve2, tolerance, property1, property2) {
+  let intersectionPoint = null;
+
+  // for (let i = 0; i < curve1.length; i++) {
+  //   const x = +curve1[i][property1];
+  //   const y1 = +curve1[i][property2];
+  //   const y2 = +curve2[i][property2];
+  //   const diff = Math.abs(y1 - y2);
+  //   if (diff <= tolerance) {
+  //     intersectionPoint = {};
+  //     intersectionPoint[property1] = x;
+  //     intersectionPoint[property2] = (y1 + y2) / 2;
+  //     return intersectionPoint;
+  //   }
+  // }
+  // with interpolation
+  for (let i = 1; i < curve1.length; i++) {
+    const x1 = +curve1[i - 1][property1];
+    const y1_1 = +curve1[i - 1][property2];
+    const y1_2 = +curve1[i][property2];
+
+    for (let j = 1; j < curve2.length; j++) {
+      const x2_1 = +curve2[j - 1][property1];
+      const y2_1 = +curve2[j - 1][property2];
+      const x2_2 = +curve2[j][property1];
+      const y2_2 = +curve2[j][property2];
+
+      // Calculate the bounding boxes
+      const minX1 = Math.min(x1, x1);
+      const maxX1 = Math.max(x1, x1);
+      const minX2 = Math.min(x2_1, x2_2);
+      const maxX2 = Math.max(x2_1, x2_2);
+
+      // Check if the bounding boxes overlap
+      if (maxX1 >= minX2 && maxX2 >= minX1) {
+        // Interpolate to estimate the y-values at the intersection
+        const t1 = (x2_1 - x1) / (x1 - x2_2);
+        const t2 = (x1 - x2_1) / (x2_2 - x2_1);
+        const y1_interp = y1_1 * t1 + y1_2 * (1 - t1);
+        const y2_interp = y2_1 * t2 + y2_2 * (1 - t2);
+
+        // Calculate the absolute difference between y-values
+        const diff = Math.abs(y1_interp - y2_interp);
+
+        if (diff <= tolerance) {
+          intersectionPoint = {};
+          intersectionPoint[property1] = (x1 + x2_1) / 2;
+          intersectionPoint[property2] = (y1_interp + y2_interp) / 2;
+          return intersectionPoint;
+        }
+      }
+    }
+  }
+
+  return intersectionPoint;
+}
+
 //----------------------------------- APPLY FUNCTIONS ---------------------------------------
 // Declare allWaters variable
 let allWaters = [];
+let maxId = 0;
 allWaters = getDataFromLocalStorage("watersData");
 // Populate the table and create graphic when the DOM is loaded
 $(document).ready(function () {
   //allWaters = getDataFromLocalStorage("watersData");
 
   if (!allWaters.length) {
-    GetJson("assets/json/input.json").then((data) => {
+    GetJson("assets/json/input.json").then((dataJSON) => {
       // Handle the fetched data here
-      populateTableWithData("#tableHD", data);
+      populateTableWithData("#tableHD", dataJSON);
+      allWaters == dataJSON;
     });
-  } else {
-    populateTableWithData("#tableHD", allWaters);
-  }
-
+    console.log(allWaters);
+  } // else {
+  //   allWaters=dataLS;
+  //   populateTableWithData("#tableHD", dataJSON);
+  // }
+  populateTableWithData("#tableHD", allWaters);
+  // get the max Id of array so to have next Id
+  maxId = Math.max(...allWaters.map((o) => o.id));
+  console.log(maxId);
   // Create the initial chart
   // X axis configuration
   const valuesTAC = [
@@ -781,8 +846,8 @@ $(document).ready(function () {
       showgrid: true, // Display the y-axis grid lines
     },
     legend: {
-      x: 0, // Adjust the x position as needed
-      y: -0.7, // Adjust the y position to move it below the graph
+      //x: 0, // Adjust the x position as needed
+      //y: -0.7, // Adjust the y position to move it below the graph
     },
     hovermode: "closest", // Show closest data on hover by default
   };
@@ -863,8 +928,11 @@ document
         roundnumber
       );
       console.log("Water results are computed");
+      //create id
+      maxId++;
       // Save input and results in an object
       let inputAndResults = {
+        id: maxId,
         ...results.inputValues,
         ...results.computedResults,
       };
@@ -890,17 +958,67 @@ document
         duration: 3000,
       }).showToast();
 
-      //----------------------------------- Create Curve ---------------------------------------
+      //----------------------------------- Create Curve Data ---------------------------------------
+      //---------------  CONSTANTS ---------------------------------------
+      const maxGraph = 100; // From 0F to 100F
+      //---------------    CURVE   ---------------------------------------
+
+      ////////////////////   SATURATION   ////////////////////////////////////////////////////
       //Create curve pHs
       let curvepHsData = [];
-      for (let i = 1; i <= 1000; i++) {
+      const TACincrement = 0.01;
+      let TACtemps = TAC;
+      let CAtemps = calcium;
+      let DryResidualtemps = DryResidual;
+      // right part of graph
+      for (let i = 1; i <= maxGraph / TACincrement; i++) {
+        let TACold = TACtemps;
+        let CAtold = CAtemps;
         let resultTAC = waterSample.HallopeauDubin(
           WaterName,
-          i / 10,
+          TACtemps,
           temperature,
           pH,
-          calcium,
-          DryResidual,
+          CAtemps,
+          DryResidualtemps,
+          conductivity,
+          resistivity,
+          sulfate,
+          cloride,
+          roundnumber
+        );
+        TACtemps = TACtemps + TACincrement;
+        CAtemps = CAtemps + TACincrement;
+        DryResidualtemps =
+          (TACtemps - TACold) * 12.2 +
+          (CAtemps - CAtold) * (4 / 10) +
+          DryResidualtemps;
+
+        let curvePoint = {
+          TAC: resultTAC.inputValues.TAC,
+          pH: resultTAC.computedResults.pHs,
+          temperature: resultTAC.inputValues.temperature,
+          CO2eq: resultTAC.computedResults.CO2eq,
+        };
+        curvepHsData.push(curvePoint);
+      }
+      // Reset values for the second part of the curve
+      TACtemps = TAC; // Reset TAC value
+      CAtemps = calcium; // Reset CAtemp value
+      DryResidualtemps = DryResidual; // Reset DryResidual value
+
+      for (let i = 1; i <= TAC / TACincrement; i++) {
+        let TACold = TACtemps;
+        let CAtold = CAtemps;
+        
+        // Calculate resultTAC using your waterSample.HallopeauDubin function
+        let resultTAC = waterSample.HallopeauDubin(
+          WaterName,
+          TACtemps,
+          temperature,
+          pH,
+          CAtemps,
+          DryResidualtemps,
           conductivity,
           resistivity,
           sulfate,
@@ -908,32 +1026,43 @@ document
           roundnumber
         );
 
+        TACtemps = TACtemps - TACincrement;
+        CAtemps = CAtemps - TACincrement;
+        DryResidualtemps =
+          -((TACtemps - TACold) * 12.2) -
+          (CAtemps - CAtold) * (4 / 10) -
+          DryResidualtemps;
+
         let curvePoint = {
           TAC: resultTAC.inputValues.TAC,
-          pHs: resultTAC.computedResults.pHs,
+          pH: resultTAC.computedResults.pHs,
           temperature: resultTAC.inputValues.temperature,
           CO2eq: resultTAC.computedResults.CO2eq,
         };
         curvepHsData.push(curvePoint);
       }
-      //console.log(curvepHsData);
 
-      //Create the curve for neutralization with limestone
-      let curveNeutraDatapHs = [];
-      let curveNeutraDatapH = [];
+      // Sort the curve data by TAC values
+      curvepHsData.sort((a, b) => a.TAC - b.TAC);
+
+      console.log(curvepHsData);
+
+      ////////////////////   NEUTRALISATION WITH LIMESTONE   ///////////////////////////////////
+      // to increase mineralization TAC of 1F , need to bring 4.4mg/l of co2 and 10 mg/l of Limestone (CaCo3)
+      let curveSaturation = [];
+      let curveNeutraDataLimestone = [];
       let TACtemp = TAC;
       let CAtemp = calcium;
       let DryResidualtemp = DryResidual;
       let CO2temp = results.computedResults.CO2;
-      //console.log(CO2temp);
-      for (let i = 1; i <= 500; i++) {
+      const co2decrement = 0.01;
+      const increaseTAC_Ca = 1 / 4.4;
+
+      for (let i = 1; i <= maxGraph / co2decrement; i++) {
         let TACold = TACtemp;
         let CAtold = CAtemp;
-
-        DryResidualtemp =
-          (TACtemp - TACold) * 12.2 + (CAtemp - CAtold) * 4 + DryResidualtemp;
-        ///////
-        let resultNeutrapHs = waterSample.HallopeauDubin_(
+        /////// To find intersectionPoint we plot again the saturation curve but at same steps as the other curves
+        let resultSaturation = waterSample.HallopeauDubin_(
           TACtemp,
           temperature,
           CAtemp,
@@ -941,14 +1070,14 @@ document
           roundnumber
         );
 
-        let curvePointpHs = {
-          TAC: resultNeutrapHs.pHs_Results.TAC,
-          pHs: resultNeutrapHs.pHs_Results.pHs_,
-          temperature: resultNeutrapHs.pHs_Results.temperature,
+        let curvePointSaturation = {
+          TAC: resultSaturation.pHs_Results.TAC,
+          pH: resultSaturation.pHs_Results.pHs_,
+          temperature: resultSaturation.pHs_Results.temperature,
         };
-        curveNeutraDatapHs.push(curvePointpHs);
-        ///////
-        let resultNeutrapH = waterSample.CO2pHcurves(
+        curveSaturation.push(curvePointSaturation);
+        /////// To find Neutralisation with Limestone
+        let resultNeutraLimeStone = waterSample.CO2pHcurves(
           temperature,
           TACtemp,
           CO2temp,
@@ -958,20 +1087,108 @@ document
           roundnumber
         );
 
-        let curvePointpH = {
-          TAC: resultNeutrapH.CO2pHCurve.TAC,
-          pH: resultNeutrapH.CO2pHCurve.pH,
-          CO2: resultNeutrapH.CO2pHCurve.CO2,
-          temperature: resultNeutrapH.CO2pHCurve.temperature,
+        let curvePointLimeStone = {
+          TAC: resultNeutraLimeStone.CO2pHCurve.TAC,
+          pH: resultNeutraLimeStone.CO2pHCurve.pH,
+          CO2: resultNeutraLimeStone.CO2pHCurve.CO2,
+          temperature: resultNeutraLimeStone.CO2pHCurve.temperature,
         };
-        curveNeutraDatapH.push(curvePointpH);
-        //console.log(resultNeutrapH);
+        curveNeutraDataLimestone.push(curvePointLimeStone);
 
-        TACtemp = TACtemp + 10 / 44;
-        CAtemp = CAtemp + 10 / 44;
-        CO2temp = CO2temp - 1;
+        TACtemp = TACtemp + increaseTAC_Ca * co2decrement;
+        CAtemp = CAtemp + increaseTAC_Ca * co2decrement;
+        CO2temp = CO2temp - co2decrement;
+        DryResidualtemp =
+          (TACtemp - TACold) * 12.2 +
+          (CAtemp - CAtold) * (4 / 10) +
+          DryResidualtemp;
+      }
+      //Find the Equilibrium point for neutralization with limestone
+      const tolerance = co2decrement; // Adjust the tolerance if needed
+      const intersection = findIntersection(
+        curveSaturation,
+        curveNeutraDataLimestone,
+        tolerance,
+        "TAC",
+        "pH"
+      );
+      if (intersection) {
+        console.log("Closest intersection point:", intersection);
+      } else {
+        console.log("No intersection point within tolerance found.");
       }
 
+      ////////////////////   NEUTRALISATION WITH LIME   ///////////////////////////////////
+      // to increase mineralization TAC of 1F , need to bring 8.8mg/l of co2 and 7.4 mg/l of hidrated lime (Ca(OH)2)
+      let curveSaturation_2 = [];
+      let curveNeutraDataLime = [];
+      let TACtempLime = TAC;
+      let CAtempLime = calcium;
+      let DryResidualtempLime = DryResidual;
+      let CO2tempLime = results.computedResults.CO2;
+      const increaseTAC_CaLime = 1 / 8.8;
+
+      for (let i = 1; i <= maxGraph / co2decrement; i++) {
+        let TACold = TACtempLime;
+        let CAtold = CAtempLime;
+        /////// To find intersectionPoint we plot again the saturation curve but at same steps as the other curves
+        let resultSaturation = waterSample.HallopeauDubin_(
+          TACtempLime,
+          temperature,
+          CAtempLime,
+          DryResidualtempLime,
+          roundnumber
+        );
+
+        let curvePointSaturation = {
+          TAC: resultSaturation.pHs_Results.TAC,
+          pH: resultSaturation.pHs_Results.pHs_,
+          temperature: resultSaturation.pHs_Results.temperature,
+        };
+        curveSaturation_2.push(curvePointSaturation);
+        /////// To find Neutralisation with Lime
+        let resultNeutraLimeStone = waterSample.CO2pHcurves(
+          temperature,
+          TACtempLime,
+          CO2tempLime,
+          DryResidualtempLime,
+          "",
+          "",
+          roundnumber
+        );
+
+        let curvePointLime = {
+          TAC: resultNeutraLimeStone.CO2pHCurve.TAC,
+          pH: resultNeutraLimeStone.CO2pHCurve.pH,
+          CO2: resultNeutraLimeStone.CO2pHCurve.CO2,
+          temperature: resultNeutraLimeStone.CO2pHCurve.temperature,
+        };
+        curveNeutraDataLime.push(curvePointLime);
+
+        TACtempLime = TACtempLime + increaseTAC_CaLime * co2decrement;
+        CAtempLime = CAtempLime + increaseTAC_CaLime * co2decrement;
+        CO2tempLime = CO2tempLime - co2decrement;
+        DryResidualtempLime =
+          (TACtempLime - TACold) * 12.2 +
+          (CAtempLime - CAtold) * (4 / 10) +
+          DryResidualtempLime;
+      }
+      console.log(curveNeutraDataLime);
+      //Find the Equilibrium point for neutralization with limestone
+      const intersection_2 = findIntersection(
+        curveSaturation,
+        curveNeutraDataLime,
+        tolerance,
+        "TAC",
+        "pH"
+      );
+      if (intersection_2) {
+        console.log("Closest intersection point:", intersection_2);
+      } else {
+        console.log("No intersection point within tolerance found.");
+      }
+
+      ////////////////////   CO2   ///////////////////////////////////////////////////
       // Create curves CO2
       let curvesCO2Data = [];
       const valuesCO2 = [
@@ -1006,9 +1223,31 @@ document
         }
         curvesCO2Data.push(curveCO2Data);
       }
+
+      /////////////////////////////////////////////////////////////////////////////////////////////////
+      //----------------------------------- Create Curve points ---------------------------------------
+      // Create trace input point
+      const PointTrace = {
+        x: [TAC],
+        y: [pH],
+        y2: [results.computedResults.CO2],
+        mode: "markers",
+        type: "scatter",
+        name: "Input Value",
+        marker: {
+          size: 10,
+          color: "#48ff00",
+        },
+        text: [
+          `TAC: ${TAC}  °F<br> pH: ${pH} <br> CO2: ${results.computedResults.CO2} mg/l`,
+        ], // Display both pH and CO2 values
+        hoverinfo: "text", // Show the text when hovering over the point
+      };
+
+      ////////////////////   SATURATION   ////////////////////////////////////////////////////
       // Extract data for the graph from curveData
       const tacValues = curvepHsData.map((point) => point.TAC);
-      const phsValues = curvepHsData.map((point) => point.pHs);
+      const phsValues = curvepHsData.map((point) => point.pH);
       const temperatureValues = curvepHsData.map((point) => point.temperature);
       const CO2eqValues = curvepHsData.map((point) => point.CO2eq);
 
@@ -1022,11 +1261,11 @@ document
         name: `Saturation curve at ${temperatureValues[0]} °C`,
         line: {
           dash: "solid",
-          color: "blue",
+          color: "#02ADF3",
           width: 2,
         },
         fill: "tozeroy", // Fill the area below the line to the y-axis
-        fillcolor: "rgba(0, 128, 0, 0.3)", // Specify the fill color below the line
+        fillcolor: "rgba(33, 208, 248, 0.3)", // Specify the fill color below the line
         // Include Text label for line
         text: temperatureValues.map(
           (temp, index) =>
@@ -1038,68 +1277,139 @@ document
         hoverinfo: "text", // Show the text when hovering over the point
       };
 
+      ////////////////////   NEUTRALISATION WITH LIMESTONE   ///////////////////////////////////
       // Extract data for the graph from curveData
-      const NeutrapH_tacValues = curveNeutraDatapH.map((point) => point.TAC);
-      const NeutrapH_phValues = curveNeutraDatapH.map((point) => point.pH);
-      const NeutrapH_CO2Values = curveNeutraDatapH.map((point) => point.CO2);
-      const NeutrapH_temperatureValues = curveNeutraDatapH.map(
+      const NeutraLimestone_tacValues = curveNeutraDataLimestone.map((point) => point.TAC);
+      const NeutraLimestone_phValues = curveNeutraDataLimestone.map((point) => point.pH);
+      const NeutraLimestone_CO2Values = curveNeutraDataLimestone.map((point) => point.CO2);
+      const NeutraLimestone_temperatureValues = curveNeutraDataLimestone.map(
         (point) => point.temperature
       );
       // Create trace for the Neutralization line
-      const NeutraTracepH = {
-        x: NeutrapH_tacValues,
-        y: NeutrapH_phValues,
+      const NeutraTraceLimestone = {
+        x: NeutraLimestone_tacValues,
+        y: NeutraLimestone_phValues,
         mode: "lines",
         type: "scatter",
-        name: `LimeStone Neutralization pH curve at ${NeutrapH_temperatureValues[0]} °C`,
+        name: `Neutralization with Limestone at ${NeutraLimestone_temperatureValues[0]} °C`,
         line: {
-          dash: "solid",
-          color: "blue",
+          dash: "dash",
+          color: "#CD09F7",
           width: 2,
         },
         //fill: "tozeroy", // Fill the area below the line to the y-axis
         //fillcolor: "rgba(0, 128, 0, 0.3)", // Specify the fill color below the line
         // Include Text label for line
-        text: NeutrapH_temperatureValues.map(
+        text: NeutraLimestone_temperatureValues.map(
           (temp, index) =>
-            `TAC: ${NeutrapH_tacValues[index]} °F<br>
-                  pH: ${NeutrapH_phValues[index]}<br>
-                  CO2: ${NeutrapH_CO2Values[index]} mg/l<br>
+            `TAC: ${NeutraLimestone_tacValues[index]} °F<br>
+                  pH: ${NeutraLimestone_phValues[index]}<br>
+                  CO2: ${NeutraLimestone_CO2Values[index]} mg/l<br>
                   Temp: ${temp} °C`
         ),
         hoverinfo: "text", // Show the text when hovering over the point
       };
 
+      // Create Limestone equilibrium point
+      const PointLimestone = {
+        x: [intersection.TAC],
+        y: [intersection.pH],
+        mode: "markers",
+        type: "scatter",
+        name: "Limestone Equilibrium",
+        marker: {
+          size: 10,
+          color: "#CD09F7",
+        },
+        text: [
+          `TACeq: ${intersection.TAC} °F<br> pHeq: ${intersection.pH}<br> CO2eq: ${results.computedResults.CO2eq} mg/l`,
+        ], // Display both pH and CO2 values
+        hoverinfo: "text", // Show the text when hovering over the point
+      };
+      // Create a horizontal trace between pH point and the limestone equilibrium point
+      const traceLineLimestone = {
+        x: [TAC, intersection.TAC],
+        y: [4, 4],
+        mode: "lines",
+        type: "scatter",
+        hoverinfo: "none",
+        name: `Limestone (CaCo3) addition (${intersection.TAC - TAC}°F or ${
+          (intersection.TAC - TAC) * 10
+        }mg/l)`,
+        line: {
+          dash: "solid",
+          width: 10,
+          color: "#cb09f775",
+        },
+      };
+
+      ///////////////////////   NEUTRALISATION WITH LIME       ///////////////////////////////////
       // Extract data for the graph from curveData
-      const NeutrapHs_tacValues = curveNeutraDatapHs.map((point) => point.TAC);
-      const NeutrapHs_phValues = curveNeutraDatapHs.map((point) => point.pHs);
-      const NeutrapHs_temperatureValues = curveNeutraDatapHs.map(
+      const NeutraLime_tacValues = curveNeutraDataLime.map((point) => point.TAC);
+      const NeutraLime_phValues = curveNeutraDataLime.map((point) => point.pH);
+      const NeutraLime_CO2Values = curveNeutraDataLime.map((point) => point.CO2);
+      const NeutraLime_temperatureValues = curveNeutraDataLime.map(
         (point) => point.temperature
       );
       // Create trace for the Neutralization line
-      const NeutraTracepHs = {
-        x: NeutrapHs_tacValues,
-        y: NeutrapHs_phValues,
+      const NeutraTraceLime = {
+        x: NeutraLime_tacValues,
+        y: NeutraLime_phValues,
         mode: "lines",
         type: "scatter",
-        name: `LimeStone Neutralization curve at ${NeutrapHs_temperatureValues[0]} °C`,
+        name: `Neutralization with Lime at ${NeutraLime_temperatureValues[0]} °C`,
         line: {
-          dash: "solid",
-          color: "blue",
+          dash: "dash",
+          color: "#ff00c8",
           width: 2,
         },
         //fill: "tozeroy", // Fill the area below the line to the y-axis
         //fillcolor: "rgba(0, 128, 0, 0.3)", // Specify the fill color below the line
         // Include Text label for line
-        text: NeutrapHs_temperatureValues.map(
+        text: NeutraLime_temperatureValues.map(
           (temp, index) =>
-            `TAC: ${NeutrapHs_tacValues[index]} °F<br>
-                 pH: ${NeutrapHs_phValues[index]}<br>
-                 Temp: ${temp} °C`
+            `TAC: ${NeutraLime_tacValues[index]} °F<br>
+                  pH: ${NeutraLime_phValues[index]}<br>
+                  CO2: ${NeutraLime_CO2Values[index]} mg/l<br>
+                  Temp: ${temp} °C`
         ),
         hoverinfo: "text", // Show the text when hovering over the point
       };
 
+      // Create Limestone equilibrium point
+      const PointLime = {
+        x: [intersection_2.TAC],
+        y: [intersection_2.pH],
+        mode: "markers",
+        type: "scatter",
+        name: "Lime Equilibrium",
+        marker: {
+          size: 10,
+          color: "#ff00c8",
+        },
+        text: [
+          `TACeq: ${intersection_2.TAC} °F<br> pHeq: ${intersection_2.pH}<br> CO2eq: ${results.computedResults.CO2eq} mg/l`,
+        ], // Display both pH and CO2 values
+        hoverinfo: "text", // Show the text when hovering over the point
+      };
+      // Create a horizontal trace between pH point and the limestone equilibrium point
+      const traceLineLime = {
+        x: [TAC, intersection_2.TAC],
+        y: [4.2, 4.2],
+        mode: "lines",
+        type: "scatter",
+        hoverinfo: "none",
+        name: `Hidrated Lime Ca(OH)2 addition (${(intersection_2.TAC - TAC)*7.4}°F or ${
+          ((intersection_2.TAC - TAC) * 10)*7.4
+        }mg/l)`,
+        line: {
+          dash: "solid",
+          width: 10,
+          color: "#ff00c875",
+        },
+      };
+
+      ////////////////////   CO2   ////////////////////////////////////////////////////
       // Create an array to store trace objects
       const traceData = [];
 
@@ -1133,24 +1443,8 @@ document
         };
         traceData.push(trace);
       }
-      // Create trace for the input TAC and pH points
-      const PointTrace = {
-        x: [TAC],
-        y: [pH],
-        y2: [results.computedResults.CO2],
-        mode: "markers",
-        type: "scatter",
-        name: "Input Value",
-        marker: {
-          size: 10,
-          color: "green",
-        },
-        text: [
-          `TAC: ${TAC}  °F<br> pH: ${pH} <br> CO2: ${results.computedResults.CO2} mg/l`,
-        ], // Display both pH and CO2 values
-        hoverinfo: "text", // Show the text when hovering over the point
-      };
-      // Create trace for the result pHs point
+
+      // Create result pHs point
       const PointResultTrace = {
         x: [TAC],
         y: [results.computedResults.pHs],
@@ -1160,7 +1454,7 @@ document
         name: "Result pHs",
         marker: {
           size: 10,
-          color: "blue",
+          color: "black",
         },
         text: [
           `TACeq: ${TAC} °F<br> pHs: ${results.computedResults.pHs}<br> CO2eq: ${results.computedResults.CO2eq} mg/l`,
@@ -1174,10 +1468,12 @@ document
         mode: "lines",
         type: "scatter",
         hoverinfo: "none",
-        name: "From pH to pHs",
+        name: `Co2 Stripping (${
+          results.computedResults.CO2 - results.computedResults.CO2eq
+        }mg/l)`,
         line: {
           dash: "dash",
-          color: "green",
+          color: "black",
         },
       };
       // Add arrow to the vertical trace showing the Co2 stripping
@@ -1192,8 +1488,11 @@ document
         arrowhead: 2, // Set arrowhead style to an upward arrow
         ax: 0, // No x-component of arrow tail
         ay: arrowposition, // Adjust the y-component of arrow tail to control its position
-        arrowcolor: "green", // Set the color of the arrow to green
+        arrowcolor: "black", // Set the color of the arrow to green
       };
+
+      ////////////////////   ANNOTATIONS   ////////////////////////////////////////////////////
+
       // Add anotation on the graph
       const annotation2 = {
         x: Math.log10(TAC), // X-coordinate where you want to place the annotation
@@ -1223,13 +1522,16 @@ document
       };
       // Combine traces and layout and plot the graph
       const datas = [
-        curveTrace,
-        NeutraTracepHs,
-        NeutraTracepH,
         PointTrace,
+        curveTrace,
         PointResultTrace,
         traceLineBetweenPoints,
-        //tracePointCO2,
+        NeutraTraceLimestone,
+        PointLimestone,
+        traceLineLimestone,
+        NeutraTraceLime,
+        PointLime,
+        traceLineLime,
       ];
 
       // Combine the new traceData with the other data array
@@ -1282,3 +1584,68 @@ function detailFormatter(index, row) {
   });
   return html.join("");
 }
+
+// Get the selected rows
+
+// Get a reference to the table element
+var $table = $("#tableHD");
+
+// Initialize an array to store selected rows
+var selectedRows = [];
+var maxSelectedRows = 3;
+// Add an event listener to capture row selections
+$table.on("check.bs.table", function (e, row) {
+  // 'check.bs.table' is triggered when a row is selected
+  //console.log("Row selected:", row);
+  // You can access the row data, including the 'id' field
+  //console.log("Row ID:", row.LSI);
+  if (selectedRows.length >= maxSelectedRows) {
+    // If the maximum selected rows limit is reached, uncheck the first selected row
+    var removedRow = selectedRows.shift();
+    $table.bootstrapTable("uncheck", [removedRow]);
+    console.log(selectedRows.length);
+  } else {
+    // if (!selectedRows.includes(row)) {
+    //   selectedRows.push(row);
+    // }
+    selectedRows.push(row.options.data["id"]);
+    console.log(selectedRows.length);
+    //console.log(selectedRowsCount);
+  }
+  // Add the selected row to the array if it's not already present
+  // if (!selectedRows.includes(row)) {
+  //   selectedRows.push(row);
+  // }
+
+  // Now 'selectedRows' contains all selected rows
+  console.log("Selected Rows:", selectedRows);
+});
+
+// Add an event listener to capture deselected rows
+$table.on("uncheck.bs.table", function (e, row) {
+  // 'uncheck.bs.table' is triggered when a row is deselected
+  console.log("Row deselected:", row);
+  var removedRowId = row.options.data["unique-id"];
+  // Find the index of the deselected row in the 'selectedRows' array
+  var index = selectedRows.indexOf(removedRowId);
+
+  // If the row is found in the array, remove it using splice
+  if (index !== -1) {
+    selectedRows.splice(index, 1);
+  }
+
+  // Now 'selectedRows' does not contain the deselected row
+  console.log("Selected Rows:", selectedRows);
+});
+
+// // Add an event listener to capture all selected rows
+// $table.on("check-all.bs.table", function (e) {
+//   // 'check-all.bs.table' is triggered when all rows are selected
+//   console.log("All rows selected");
+// });
+
+// // Add an event listener to capture all deselected rows
+// $table.on("uncheck-all.bs.table", function (e) {
+//   // 'uncheck-all.bs.table' is triggered when all rows are deselected
+//   console.log("All rows deselected");
+// });
